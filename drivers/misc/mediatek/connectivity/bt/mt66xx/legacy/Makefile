@@ -30,7 +30,7 @@ endif
 ###############################################################################
 
 MODULE_NAME := bt_drv
-obj-m += $(MODULE_NAME).o
+obj-$(CONFIG_MTK_COMBO_BT) += $(MODULE_NAME).o
 
 ccflags-y += -D CREATE_NODE_DYNAMIC=1
 
