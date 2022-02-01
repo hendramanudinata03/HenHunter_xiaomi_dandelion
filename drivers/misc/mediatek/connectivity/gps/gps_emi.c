@@ -29,9 +29,6 @@
 #include <linux/printk.h>
 #include <linux/version.h>
 #include <asm/memblock.h>
-#if EMI_MPU_PROTECTION_IS_READY
-#include <mt_emi_api.h>
-#endif
 #include "gps.h"
 
 #ifdef pr_fmt
@@ -114,19 +111,6 @@ void mtk_wcn_consys_gps_memory_reserve(void)
 
 INT32 gps_emi_mpu_set_region_protection(INT32 region)
 {
-	#if EMI_MPU_PROTECTION_IS_READY
-	struct emi_region_info_t region_info;
-	/*set MPU for EMI share Memory */
-	GPS_DBG("setting MPU for EMI share memory\n");
-	region_info.start = gGpsEmiPhyBase;
-	region_info.end = gGpsEmiPhyBase + GPS_EMI_MPU_SIZE - 1;
-	region_info.region = region;
-	SET_ACCESS_PERMISSION(region_info.apc, LOCK,
-	FORBIDDEN, FORBIDDEN, FORBIDDEN, FORBIDDEN, FORBIDDEN, FORBIDDEN, FORBIDDEN,
-	FORBIDDEN, FORBIDDEN, FORBIDDEN, FORBIDDEN, FORBIDDEN, FORBIDDEN,
-	NO_PROTECTION, FORBIDDEN, NO_PROTECTION);
-	emi_mpu_set_protection(&region_info);
-	#endif
 	return 0;
 }
 
@@ -158,11 +142,6 @@ INT32 mtk_wcn_consys_gps_emi_init(void)
 	down(&fw_dl_mtx);
 	mtk_wcn_consys_gps_memory_reserve();
 	if (gGpsEmiPhyBase) {
-		/*set MPU for EMI share Memory*/
-		#if EMI_MPU_PROTECTION_IS_READY
-		GPS_DBG("setting MPU for EMI share memory\n");
-		gps_emi_mpu_set_region_protection(GPS_EMI_MPU_REGION);
-		#endif
 		GPS_DBG("get consys start phy address(0x%zx)\n", (size_t)gGpsEmiPhyBase);
 		#if 0
 		/*consys to ap emi remapping register:10001310, cal remapping address*/
