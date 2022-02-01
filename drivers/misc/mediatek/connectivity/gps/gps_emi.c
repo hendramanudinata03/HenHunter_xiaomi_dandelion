@@ -407,7 +407,7 @@ static const struct of_device_id apgps_of_ids[] = {
 	{}
 };
 #endif
-static struct platform_driver gps_emi_driver = {
+static struct platform_driver __maybe_unused gps_emi_driver = {
 	.probe = gps_emi_probe,
 	.remove = gps_emi_remove,
 #if defined(CONFIG_PM)
